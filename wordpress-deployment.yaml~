@@ -10,7 +10,7 @@ spec:
   selector:
     app: wordpress
     tier: frontend
-  type: NodePort
+  type: ClusterIP
 ---
 # Persistent volume claim to persist website data files
 apiVersion: v1
