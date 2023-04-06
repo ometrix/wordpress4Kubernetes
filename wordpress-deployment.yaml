@@ -1,31 +1,4 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: wordpress
-  labels:
-    app: wordpress
-spec:
-  ports:
-    - port: 8080
-  selector:
-    app: wordpress
-    tier: frontend
-  type: NodePort
----
-# Persistent volume claim to persist website data files
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: wp-pv-claim
-  labels:
-    app: wordpress
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi
----
+# Manifiesto de Aplicacion de Wordpress
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -45,8 +18,10 @@ spec:
         app: wordpress
         tier: frontend
     spec:
+# Monta el sistema de archivos como el usuario 1001
       securityContext:
         fsGroup: 1001
+# Describe que container usara el Pod
       containers:
         - image: docker.io/bitnami/wordpress-nginx:6
           name: wordpress
@@ -59,6 +34,7 @@ spec:
             value: 'bitnami_wordpress'
           - name: WORDPRESS_DATABASE_USER
             value: 'bn_wordpress'
+# Variable usando secret
           - name: WORDPRESS_DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -70,6 +46,7 @@ spec:
             value: 'Omar'
           - name: WORDPRESS_LAST_NAME
             value: 'Vilera'
+# Variable usando secret
           - name: WORDPRESS_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -81,31 +58,19 @@ spec:
             value: 'ovilera'
           securityContext:
             runAsUser: 1001
+# Puertos del container            
           ports:
             - containerPort: 8080
               name: wordpress
+# Path donde se monta el volumen de archivos              
           volumeMounts:
             - name: wordpress-persistent-storage
               mountPath: /bitnami/wordpress
-        
+# PVC para el almacenamiento persistente
       volumes:
         - name: wordpress-persistent-storage
           persistentVolumeClaim:
             claimName: wp-pv-claim
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: wordpress-mysql
-  labels:
-    app: wordpress
-spec:
-  ports:
-  - port: 3306
-  selector:
-    app: wordpress
-    tier: mysql
-  clusterIP: None
 ---
 apiVersion: apps/v1
 kind: StatefulSet

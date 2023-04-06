@@ -1,3 +1,4 @@
+# Servicio de wordpress
 apiVersion: v1
 kind: Service
 metadata:
@@ -11,7 +12,8 @@ spec:
     app: wordpress
     tier: frontend
   type: NodePort
-  ---
+---
+# Servicio de MySQL
 apiVersion: v1
 kind: Service
 metadata:
