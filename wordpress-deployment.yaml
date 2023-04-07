@@ -27,13 +27,25 @@ spec:
           name: wordpress
           env:
           - name: WORDPRESS_BLOG_NAME
-            value: 'test'
+            valueFrom:
+              configMapKeyRef:
+                name: wpblogname
+                key: name
           - name: WORDPRESS_DATABASE_HOST
-            value: 'wordpress-mysql'
+            valueFrom:
+              configMapKeyRef:
+                name: wpdbhost
+                key: name
           - name: WORDPRESS_DATABASE_NAME
-            value: 'bitnami_wordpress'
+            valueFrom:
+              configMapKeyRef:
+                name: wpdbname
+                key: name
           - name: WORDPRESS_DATABASE_USER
-            value: 'bn_wordpress'
+            valueFrom:
+              configMapKeyRef:
+                name: wpdbuser
+                key: name
 # Variable usando secret
           - name: WORDPRESS_DATABASE_PASSWORD
             valueFrom:
@@ -43,9 +55,9 @@ spec:
           - name: WORDPRESS_EMAIL
             value: 'omarvilera21@gmail.com'
           - name: WORDPRESS_FIRST_NAME
-            value: 'Omar'
+            value: 'Mi'
           - name: WORDPRESS_LAST_NAME
-            value: 'Vilera'
+            value: 'Empresa'
 # Variable usando secret
           - name: WORDPRESS_PASSWORD
             valueFrom:
@@ -53,9 +65,15 @@ spec:
                 name: wppass
                 key: wpsecret
           - name: WORDPRESS_PLUGINS
-            value: 'woocommerce, classic-editor'
+            valueFrom:
+              configMapKeyRef:
+                name: wpplugins
+                key: name
           - name: WORDPRESS_USERNAME
-            value: 'ovilera'
+            valueFrom:
+              configMapKeyRef:
+                name: wpusername
+                key: name
           securityContext:
             runAsUser: 1001
 # Puertos del container            
@@ -96,9 +114,15 @@ spec:
         name: mysql
         env:
         - name: MYSQL_USER
-          value: 'bn_wordpress'
+          valueFrom:
+              configMapKeyRef:
+                name: wpdbuser
+                key: name
         - name: MYSQL_DATABASE
-          value: 'bitnami_wordpress'
+          valueFrom:
+              configMapKeyRef:
+                name: wpdbname
+                key: name
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
