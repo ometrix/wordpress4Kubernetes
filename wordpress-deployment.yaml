@@ -32,10 +32,7 @@ spec:
                 name: wpblogname
                 key: name
           - name: WORDPRESS_DATABASE_HOST
-            valueFrom:
-              configMapKeyRef:
-                name: wpdbhost
-                key: name
+            value: 'wordpress-mysql'
           - name: WORDPRESS_DATABASE_NAME
             valueFrom:
               configMapKeyRef:
